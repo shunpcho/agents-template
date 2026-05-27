@@ -125,7 +125,7 @@ val_transform = albu.Compose(
 - 拡張パイプラインはトレーニング時のみ適用する。検証・テスト時は正規化のみ。
 - `additional_targets` を使って degraded / clean の空間変換の一貫性を保証する。
 - 劣化付加（ノイズ・ブラー等）は `degradation.py` で管理し、このパイプラインに含めない。
-- 再現性のために `albumentations` の設定を `A.to_dict()` / `A.from_dict()` でシリアライズ可能にする。
+- 再現性のために `albumentations` の設定を `albu.to_dict(...)` / `albu.from_dict(...)` でシリアライズ可能にする。
 - テスト時は全解像度（full-size）の画像を使用する。
 
 ## Common Pitfalls
