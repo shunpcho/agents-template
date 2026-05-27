@@ -86,6 +86,6 @@ src/
 
 ## Related Skills
 
-- [image-denoising](../../.github/skills/image-denoising/SKILL.md)
-- [super-resolution](../../.github/skills/super-resolution/SKILL.md)
-- [image-deblurring](../../.github/skills/image-deblurring/SKILL.md)
+- [image-denoising](../skills/image-denoising/SKILL.md)
+- [super-resolution](../skills/super-resolution/SKILL.md)
+- [image-deblurring](../skills/image-deblurring/SKILL.md)
