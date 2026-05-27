@@ -79,7 +79,7 @@ Restoration タスクでは degraded / clean の輝度・色調整を **同時�
 | ガウシアンノイズ付加 | **degraded のみ** に適用（合成劣化として `degradation.py` で管理）|
 | ブラー | **degraded のみ** に適用（合成劣化として `degradation.py` で管理）|
 
-> **注意**: ノイズ・ブラーなどの劣化付加は `data-augmentation.md` ではなく `cv-data-agent.md` の `degradation.py` で管理します。データ拡張と劣化合成を明確に分離してください。
+> **注意**: ノイズ・ブラーなどの劣化付加はこの `SKILL.md` ではなく `cv-data-agent.agent.md` の `degradation.py` で管理します。データ拡張と劣化合成を明確に分離してください。
 
 ## Task-Specific Pipeline Examples
 
