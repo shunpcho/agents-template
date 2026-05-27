@@ -38,7 +38,8 @@ CV Training Agent は Image Restoration モデルのトレーニングサイク�
 - `torch.utils.data.DataLoader`（train / val）
   - 各バッチは `tuple[torch.Tensor, torch.Tensor]`（degraded, clean）
 - トレーニング設定（`@dataclass(slots=True)`）
-  - `num_epochs: int`
+  - `num_iterations: int`（総学習イテレーション数; `args.num_iterations` から読み込む）
+  - `val_interval: int`（何イテレーションごとに validation を実行するか; `args.val_interval` から読み込む）
   - `learning_rate: float`
   - `weight_decay: float`
   - `patch_size: int`（学習時のパッチサイズ）
@@ -66,12 +67,14 @@ CV Training Agent は Image Restoration モデルのトレーニングサイク�
 ## Implementation Guidelines
 
 - トレーニング設定は `@dataclass(slots=True)` で定義し、YAML ファイルから読み込む。
+- 学習ループはエポックではなく **イテレーション（ステップ）** で管理する。`args.num_iterations` を上限とし、`for iteration in range(args.num_iterations):` のような形で実装する。
+- `iteration % args.val_interval == 0` の条件で validation を実行し、検証メトリクス（PSNR / SSIM）を記録する。
 - 再現性を確保するためにランダムシードを固定する（`torch.manual_seed`, `numpy.random.seed`）。
 - `pathlib.Path` を使用してチェックポイントのパスを管理する。
 - GPU/CPU を抽象化するために `torch.device` を使用する。
 - 学習率・損失値は `float` 型で記録する。
 - MLflow の実験は `mlflow.set_experiment` で管理し、各 run は `mlflow.start_run` で開始する。
-- ハイパーパラメータは `mlflow.log_params`、epoch ごとのメトリクスは `mlflow.log_metrics(step=epoch)` で記録する。
+- ハイパーパラメータは `mlflow.log_params`、イテレーションごとのメトリクスは `mlflow.log_metrics(step=iteration)` で記録する。
 - 最終モデルは `mlflow.pytorch.log_model` でアーティファクトとして保存する。
 
 ## Example Structure
