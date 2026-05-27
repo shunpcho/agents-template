@@ -40,8 +40,8 @@ CV Data Agent は Image Restoration プロジェクトにおけるデータ管�
 
 - データセットのルートディレクトリパス（`pathlib.Path`）
   - `docs/data_structure.md` に定義された以下の 3 ケースに対応する：
-    - **Case 1**: 単一ディレクトリにペア画像が混在（`_mean` / `_real` キーワードで対応付け）
-    - **Case 2**: `train` / `val` サブディレクトリを持ち、各ディレクトリ内でキーワード対応付け（`_mean` / `_real`）
+    - **Case 1**: 単一ディレクトリにペア画像が混在（例: `_mean` / `_real` キーワードで対応付け）
+    - **Case 2**: `train` / `val` サブディレクトリを持ち、各ディレクトリ内でキーワード対応付け（例: `_mean` / `_real`）
     - **Case 3**: `clean` / `degre` サブディレクトリで分離
   - Case 1・Case 3 はデータセット読み込み時に train / val へ分割する。分割比率はハイパーパラメータとして設定可能にする。
   - Case 2 は既存の `train` / `val` ディレクトリをそのまま train / val セットとして使用する。
