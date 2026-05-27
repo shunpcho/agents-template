@@ -34,6 +34,27 @@ This template defines:
 - `src/<package>/` - Your package source code
 - `tests/` - Test suite
 
+## Computer Vision Framework
+
+This template includes documentation for building a supervised learning **Image Restoration** framework using PyTorch, with experiment tracking via MLflow.
+
+### Subagents (`docs/subagents/`)
+
+| File | Role |
+|------|------|
+| `cv-data-agent.md` | Pair dataset loading, synthetic degradation pipelines, and patch-based DataLoader |
+| `cv-training-agent.md` | Model training with pixel/perceptual/SSIM loss, MLflow experiment tracking |
+| `cv-evaluation-agent.md` | PSNR / SSIM / LPIPS evaluation, side-by-side visualization, MLflow logging |
+
+### Skills (`docs/skills/`)
+
+| File | Task |
+|------|------|
+| `image-denoising.md` | Gaussian / Poisson / real-world noise removal (DnCNN, NAFNet, Restormer) |
+| `super-resolution.md` | Single image super-resolution ×2/×3/×4 (EDSR, SwinIR, Real-ESRGAN) |
+| `image-deblurring.md` | Motion / defocus blur removal (NAFNet, MPRNet, DeblurGAN-v2) |
+| `data-augmentation.md` | Pair-consistent augmentation pipelines using albumentations |
+
 ## Resources
 
 - [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html) - Referenced for style conventions
