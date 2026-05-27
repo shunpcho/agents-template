@@ -38,8 +38,13 @@ CV Data Agent は Image Restoration プロジェクトにおけるデータ管�
 
 ### Input
 
-- クリーン画像ファイルが格納されたディレクトリパス（`pathlib.Path`）
-  - 実劣化データセットの場合は degraded / clean 対応ペアのディレクトリパス
+- データセットのルートディレクトリパス（`pathlib.Path`）
+  - `docs/data_structure.md` に定義された以下の 3 ケースに対応する：
+    - **Case 1**: 単一ディレクトリにペア画像が混在（`_mean` / `_real` キーワードで対応付け）
+    - **Case 2**: `train` / `val` サブディレクトリを持ち、各ディレクトリ内でキーワード対応付け（`_mean` / `_real`）
+    - **Case 3**: `clean` / `degre` サブディレクトリで分離
+  - Case 1・Case 3 はデータセット読み込み時に train / val へ分割する。分割比率はハイパーパラメータとして設定可能にする。
+  - Case 2 は既存の `train` / `val` ディレクトリをそのまま train / val セットとして使用する。
 - 劣化合成設定（`@dataclass(slots=True)`）
 - 前処理設定（パッチサイズ、正規化設定）
 
@@ -53,6 +58,10 @@ CV Data Agent は Image Restoration プロジェクトにおけるデータ管�
 
 - `pathlib.Path` を使用してファイルパスを扱う。
 - 劣化合成設定と前処理設定は `@dataclass(slots=True)` で定義する。
+- データセット構造は `docs/data_structure.md` の Case 1〜3 を自動判別し、対応するローダーを選択する。
+  - Case 2（`train` / `val` サブディレクトリが存在する）は優先的に判別し、既存の分割をそのまま使用する。
+  - Case 1・Case 3 はすべてのペアを読み込んだ後、指定された `val_split` 比率（例: 0.1）で train / val に分割する。分割は再現性のためにシードを固定してランダムに行う。
+- ペア画像の対応付けはファイル名ベームで行う（Case 1・2: `_mean` / `_real` キーワード、Case 3: 同一ファイル名）。
 - 超解像タスクでは LR 画像（low-resolution）と HR 画像（high-resolution）のペアを管理する。
 - パッチ抽出はトレーニング時のみ適用し、テスト・検証時は full-size 画像を使用する。
 - 劣化強度（ノイズレベル、JPEG quality 等）はハイパーパラメータとして外部設定できるようにする。
