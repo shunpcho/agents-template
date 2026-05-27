@@ -38,13 +38,15 @@ This template defines:
 
 This template includes documentation for building a supervised learning **Image Restoration** framework using PyTorch, with experiment tracking via MLflow.
 
-### Subagents (`docs/subagents/`)
+### Agents (`.github/agents/`)
+
+Custom agents following the [custom agent developer guide](https://copilot-academy.github.io/workshops/copilot-customization/custom_agent_developer_guide). Each agent lives in `.github/agents/` as a `.agent.md` file with YAML frontmatter and instructions.
 
 | File | Role |
 |------|------|
-| `cv-data-agent.md` | Pair dataset loading, synthetic degradation pipelines, and patch-based DataLoader |
-| `cv-training-agent.md` | Model training with pixel/perceptual/SSIM loss, MLflow experiment tracking |
-| `cv-evaluation-agent.md` | PSNR / SSIM / LPIPS evaluation, side-by-side visualization, MLflow logging |
+| `cv-data-agent.agent.md` | Pair dataset loading, synthetic degradation pipelines, and patch-based DataLoader |
+| `cv-training-agent.agent.md` | Model training with pixel/perceptual/SSIM loss, MLflow experiment tracking |
+| `cv-evaluation-agent.agent.md` | PSNR / SSIM / LPIPS evaluation, side-by-side visualization, MLflow logging |
 
 ### Skills (`.github/skills/`)
 
