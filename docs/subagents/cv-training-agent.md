@@ -12,7 +12,7 @@ CV Training Agent は Computer Vision モデルのトレーニングサイクル
 - 学習ループの実装（forward / backward pass、勾配クリッピング）
 - 混合精度学習（`torch.amp`）の適用
 - チェックポイントの保存・復元
-- TensorBoard / WandB などへの学習ログの記録
+- MLflow による学習ログの記録（パラメータ・メトリクス・アーティファクトのトラッキング）
 - 過学習防止策（early stopping、weight decay、dropout）の実装
 
 ## Interaction with Other Agents
@@ -28,6 +28,7 @@ CV Training Agent は Computer Vision モデルのトレーニングサイクル
 - `timm`（transfer learning / pretrained backbone）
 - `torch.optim`, `torch.optim.lr_scheduler`
 - `torch.amp`（混合精度学習）
+- `mlflow`（実験トラッキング）
 
 ## Input / Output Contract
 
@@ -53,6 +54,9 @@ CV Training Agent は Computer Vision モデルのトレーニングサイクル
 - `pathlib.Path` を使用してチェックポイントのパスを管理する。
 - GPU/CPU を抽象化するために `torch.device` を使用する。
 - 学習率・損失値は `float` 型で記録する。
+- MLflow の実験は `mlflow.set_experiment` で管理し、各 run は `mlflow.start_run` で開始する。
+- ハイパーパラメータは `mlflow.log_params`、epoch ごとのメトリクスは `mlflow.log_metrics(step=epoch)` で記録する。
+- 最終モデルは `mlflow.pytorch.log_model` でアーティファクトとして保存する。
 
 ## Example Structure
 
@@ -65,7 +69,7 @@ src/
       config.py        # トレーニング設定データクラス
       callbacks.py     # EarlyStopping、チェックポイント保存コールバック
       scheduler.py     # 学習率スケジューラのファクトリ
-      logger.py        # TensorBoard / WandB ロガー
+      logger.py        # MLflow ロガー（パラメータ・メトリクス・アーティファクト記録）
 ```
 
 ## Related Skills

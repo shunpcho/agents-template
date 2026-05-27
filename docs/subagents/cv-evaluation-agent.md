@@ -31,6 +31,7 @@ CV Evaluation Agent は Computer Vision モデルの評価・分析・可視化�
 - `matplotlib`, `seaborn`
 - `scikit-learn`（混同行列、分類レポート）
 - `grad-cam`（`pytorch-grad-cam`）
+- `mlflow`（評価メトリクス・可視化結果のトラッキング）
 
 ## Input / Output Contract
 
@@ -52,6 +53,8 @@ CV Evaluation Agent は Computer Vision モデルの評価・分析・可視化�
 ## Implementation Guidelines
 
 - メトリクスは `torchmetrics` を優先して使用し、独自実装を避ける。
+- 算出したメトリクスは `mlflow.log_metrics` で記録し、可視化画像は `mlflow.log_artifact` でアーティファクトとして保存する。
+- 評価は CV Training Agent が管理する MLflow run に紐付ける（同一 run_id を使用するか、子 run を作成する）。
 - 可視化ファイルは `pathlib.Path` で管理し、出力先を設定ファイルで制御する。
 - 推論時は `torch.inference_mode()` コンテキストを使用する。
 - バッチ処理で OOM を防ぐため、テストデータは DataLoader 経由で処理する。

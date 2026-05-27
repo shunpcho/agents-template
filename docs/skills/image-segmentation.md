@@ -70,6 +70,9 @@ COCO JSON 形式（ポリゴンアノテーション）でも対応可能。`pyc
 - [ ] クラス不均衡時は `weight` 引数付き `CrossEntropyLoss` またはFocal Lossを使用する
 - [ ] `torchmetrics.JaccardIndex` で mIoU を算出する
 - [ ] 予測マスクを元の画像解像度にアップサンプリングして評価する
+- [ ] `mlflow.log_params` でハイパーパラメータを記録する
+- [ ] `mlflow.log_metrics(step=epoch)` で epoch ごとの loss / mIoU を記録する
+- [ ] `mlflow.pytorch.log_model` でトレーニング済みモデルを保存する
 
 ## Common Pitfalls
 

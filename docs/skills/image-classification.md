@@ -68,6 +68,9 @@ dataset/
 - [ ] 学習率スケジューラに `CosineAnnealingLR` を使用する
 - [ ] 評価時に `torch.inference_mode()` を使用する
 - [ ] `torchmetrics.Accuracy` でメトリクスを計測する
+- [ ] `mlflow.log_params` でハイパーパラメータを記録する
+- [ ] `mlflow.log_metrics(step=epoch)` で epoch ごとの loss / accuracy を記録する
+- [ ] `mlflow.pytorch.log_model` でトレーニング済みモデルを保存する
 
 ## Common Pitfalls
 

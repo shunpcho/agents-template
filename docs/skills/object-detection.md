@@ -68,6 +68,9 @@ COCO JSON 形式を推奨します。
 - [ ] `torchvision.ops.nms` または `batched_nms` で重複ボックスを除去する
 - [ ] `torchmetrics.detection.MeanAveragePrecision` でmAPを算出する
 - [ ] 信頼スコアの閾値をハイパーパラメータとして外部設定できるようにする
+- [ ] `mlflow.log_params` でハイパーパラメータ（NMS 閾値、信頼スコア閾値等）を記録する
+- [ ] `mlflow.log_metrics(step=epoch)` で epoch ごとの loss / mAP を記録する
+- [ ] `mlflow.pytorch.log_model` でトレーニング済みモデルを保存する
 
 ## Common Pitfalls
 
