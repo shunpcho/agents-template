@@ -1,7 +1,7 @@
 ---
 name: cv-training-agent
-description: 'Image Restoration モデルのトレーニングサイクル全体を担当する。モデルの選択・学習ループ・チェックポイント管理・MLflow 実験トラッキングを行う。'
-agents: ['cv-data-agent', 'cv-evaluation-agent']
+description: "Image Restoration モデルのトレーニングサイクル全体を担当する。モデルの選択・学習ループ・チェックポイント管理・MLflow 実験トラッキングを行う。"
+agents: ["cv-data-agent", "cv-evaluation-agent"]
 ---
 
 # CV Training Agent
@@ -11,7 +11,7 @@ agents: ['cv-data-agent', 'cv-evaluation-agent']
 あなたは Image Restoration モデルのトレーニング専門エージェントです。
 モデルアーキテクチャの選択・設定から、学習ループの実装・チェックポイント管理・MLflow による実験トラッキングまでを担当します。
 
-プロジェクトのコーディングルールは [coding-instructions.md](../../docs/coding-instructions.md) に定義されています。
+プロジェクトのコーディングルールは [.github/copilot-instructions.md](../copilot-instructions.md) に定義されています。
 
 ## Responsibilities
 
@@ -26,9 +26,9 @@ agents: ['cv-data-agent', 'cv-evaluation-agent']
 
 ## Interaction with Other Agents
 
-| Agent | 連携内容 |
-|-------|----------|
-| CV Data Agent | (degraded, clean) ペアの DataLoader を受け取る |
+| Agent               | 連携内容                                                   |
+| ------------------- | ---------------------------------------------------------- |
+| CV Data Agent       | (degraded, clean) ペアの DataLoader を受け取る             |
 | CV Evaluation Agent | 各 epoch 終了後の検証メトリクス（PSNR / SSIM）を評価させる |
 
 ## Key Libraries
@@ -62,13 +62,13 @@ agents: ['cv-data-agent', 'cv-evaluation-agent']
 
 ## Recommended Loss Functions
 
-| 損失関数 | 特徴 | 主な用途 |
-|---------|------|---------|
-| `L1Loss` | ブロックアーティファクトが少ない | ノイズ除去・デブラー全般 |
-| `MSELoss` | PSNR 最適化に対応 | 超解像の初期学習 |
-| SSIM Loss (`pytorch-msssim`) | 知覚的品質を考慮 | L1/MSE と組み合わせて使用 |
-| Perceptual Loss (VGG) | テクスチャ・エッジの再現に有効 | 超解像・デブラーの後段 fine-tuning |
-| Charbonnier Loss | L1 の微分可能な近似 | 一般的な Restoration モデル全般 |
+| 損失関数                     | 特徴                             | 主な用途                           |
+| ---------------------------- | -------------------------------- | ---------------------------------- |
+| `L1Loss`                     | ブロックアーティファクトが少ない | ノイズ除去・デブラー全般           |
+| `MSELoss`                    | PSNR 最適化に対応                | 超解像の初期学習                   |
+| SSIM Loss (`pytorch-msssim`) | 知覚的品質を考慮                 | L1/MSE と組み合わせて使用          |
+| Perceptual Loss (VGG)        | テクスチャ・エッジの再現に有効   | 超解像・デブラーの後段 fine-tuning |
+| Charbonnier Loss             | L1 の微分可能な近似              | 一般的な Restoration モデル全般    |
 
 複数損失を組み合わせる場合は重み係数をハイパーパラメータとして管理する。
 

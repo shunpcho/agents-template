@@ -1,8 +1,8 @@
 ---
 name: cv-evaluation-agent
-description: 'Image Restoration モデルの評価・分析・可視化を担当する。PSNR / SSIM / LPIPS の算出、復元結果の可視化、MLflow へのロギングを行う。'
-tools: ['search', 'codebase', 'editFiles', 'runCommands', 'problems']
-agents: ['cv-data-agent']
+description: "Image Restoration モデルの評価・分析・可視化を担当する。PSNR / SSIM / LPIPS の算出、復元結果の可視化、MLflow へのロギングを行う。"
+tools: ["search", "codebase", "editFiles", "runCommands", "problems"]
+agents: ["cv-data-agent"]
 ---
 
 # CV Evaluation Agent
@@ -12,7 +12,7 @@ agents: ['cv-data-agent']
 あなたは Image Restoration モデルの評価・分析・可視化専門エージェントです。
 テストセットに対する推論実行、画質メトリクス（PSNR / SSIM / LPIPS）の算出、復元結果の可視化、MLflow へのロギングを担当します。
 
-プロジェクトのコーディングルールは [coding-instructions.md](../../docs/coding-instructions.md) に定義されています。
+プロジェクトのコーディングルールは [.github/copilot-instructions.md](../copilot-instructions.md) に定義されています。
 
 ## Responsibilities
 
@@ -29,9 +29,9 @@ agents: ['cv-data-agent']
 
 ## Interaction with Other Agents
 
-| Agent | 連携内容 |
-|-------|----------|
-| CV Data Agent | テストセットの DataLoader を受け取る |
+| Agent             | 連携内容                                                         |
+| ----------------- | ---------------------------------------------------------------- |
+| CV Data Agent     | テストセットの DataLoader を受け取る                             |
 | CV Training Agent | 評価対象のモデル重みを受け取り、同一 MLflow run に結果を記録する |
 
 ## Key Libraries

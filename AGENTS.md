@@ -2,12 +2,12 @@
 
 ## 0) Where to find coding rules
 - Coding rules (style, typing, testing, tooling) are defined in:
-  - `docs/coding-instructions.md`
+  - `.github/copilot-instructions.md`
 - Consult it before making stylistic decisions.
 
 ## 1) Priority / scope
 - Follow this file first.
-- Then follow `docs/coding-instructions.md`.
+- Then follow `.github/copilot-instructions.md`.
 - Then follow other repository docs (`README.md`, `CONTRIBUTING.md`, `docs/*`).
 - If instructions conflict, ask for clarification rather than guessing.
 
