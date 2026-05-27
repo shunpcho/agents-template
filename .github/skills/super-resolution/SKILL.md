@@ -1,3 +1,12 @@
+---
+name: super-resolution
+description: >
+  単一画像超解像（Single Image Super-Resolution, SISR）タスクを実装する。
+  低解像度（LR）画像から高解像度（HR）画像を復元する教師あり学習モデルを構築する。
+  スケール ×2 / ×3 / ×4 に対応。EDSR、SwinIR、Real-ESRGAN などのアーキテクチャを
+  使用する場合に利用する。
+---
+
 # Skill: Super-Resolution
 
 ## Overview

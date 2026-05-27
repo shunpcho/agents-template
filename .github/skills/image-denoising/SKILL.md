@@ -1,3 +1,12 @@
+---
+name: image-denoising
+description: >
+  画像ノイズ除去（Image Denoising）タスクを実装する。
+  ノイズ付き劣化画像からクリーン画像を復元する教師あり学習モデルを構築する。
+  AWGN、Poisson noise、salt-and-pepper、real-world noise に対応。
+  DnCNN、NAFNet、Restormer などのアーキテクチャを使用する場合に利用する。
+---
+
 # Skill: Image Denoising
 
 ## Overview

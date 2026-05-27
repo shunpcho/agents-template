@@ -1,3 +1,12 @@
+---
+name: image-deblurring
+description: >
+  画像デブラー（Image Deblurring）タスクを実装する。
+  ブラーを含む劣化画像からシャープなクリーン画像を復元する教師あり学習モデルを構築する。
+  モーションブラー、デフォーカスブラー、ガウシアンブラーに対応。
+  NAFNet、MPRNet、DeblurGAN-v2 などのアーキテクチャを使用する場合に利用する。
+---
+
 # Skill: Image Deblurring
 
 ## Overview

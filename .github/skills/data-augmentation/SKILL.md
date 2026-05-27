@@ -1,3 +1,12 @@
+---
+name: data-augmentation
+description: >
+  Image Restoration モデルのデータ拡張パイプラインを構築する。
+  albumentations を使用して degraded / clean ペア画像に同一の空間変換を適用する。
+  データ拡張、augmentation pipeline、pair-consistent transform、albumentations の
+  実装・設定を行う場合に使用する。
+---
+
 # Skill: Data Augmentation
 
 ## Overview
@@ -70,7 +79,7 @@ Restoration タスクでは degraded / clean の輝度・色調整を **同時�
 | ガウシアンノイズ付加 | **degraded のみ** に適用（合成劣化として `degradation.py` で管理）|
 | ブラー | **degraded のみ** に適用（合成劣化として `degradation.py` で管理）|
 
-> **注意**: ノイズ・ブラーなどの劣化付加は `data-augmentation.md` ではなく `cv-data-agent.md` の `degradation.py` で管理します。データ拡張と劣化合成を明確に分離してください。
+> **注意**: ノイズ・ブラーなどの劣化付加はこの `SKILL.md` ではなく `cv-data-agent.agent.md` の `degradation.py` で管理します。データ拡張と劣化合成を明確に分離してください。
 
 ## Task-Specific Pipeline Examples
 
@@ -116,7 +125,7 @@ val_transform = albu.Compose(
 - 拡張パイプラインはトレーニング時のみ適用する。検証・テスト時は正規化のみ。
 - `additional_targets` を使って degraded / clean の空間変換の一貫性を保証する。
 - 劣化付加（ノイズ・ブラー等）は `degradation.py` で管理し、このパイプラインに含めない。
-- 再現性のために `albumentations` の設定を `A.to_dict()` / `A.from_dict()` でシリアライズ可能にする。
+- 再現性のために `albumentations` の設定を `albu.to_dict(...)` / `albu.from_dict(...)` でシリアライズ可能にする。
 - テスト時は全解像度（full-size）の画像を使用する。
 
 ## Common Pitfalls
