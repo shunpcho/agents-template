@@ -34,6 +34,27 @@ This template defines:
 - `src/<package>/` - Your package source code
 - `tests/` - Test suite
 
+## Computer Vision Framework
+
+This template includes documentation for building a Computer Vision machine learning framework.
+
+### Subagents (`docs/subagents/`)
+
+| File | Role |
+|------|------|
+| `cv-data-agent.md` | Dataset loading, preprocessing, and augmentation pipelines |
+| `cv-training-agent.md` | Model training, optimization, and checkpoint management |
+| `cv-evaluation-agent.md` | Metrics computation, visualization, and model analysis |
+
+### Skills (`docs/skills/`)
+
+| File | Task |
+|------|------|
+| `image-classification.md` | Single-label and multi-label image classification |
+| `object-detection.md` | Bounding box detection (YOLO, DETR, Faster R-CNN) |
+| `image-segmentation.md` | Semantic and instance segmentation |
+| `data-augmentation.md` | Augmentation pipelines using albumentations |
+
 ## Resources
 
 - [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html) - Referenced for style conventions
