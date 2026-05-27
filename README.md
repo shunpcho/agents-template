@@ -46,14 +46,16 @@ This template includes documentation for building a supervised learning **Image 
 | `cv-training-agent.md` | Model training with pixel/perceptual/SSIM loss, MLflow experiment tracking |
 | `cv-evaluation-agent.md` | PSNR / SSIM / LPIPS evaluation, side-by-side visualization, MLflow logging |
 
-### Skills (`docs/skills/`)
+### Skills (`.github/skills/`)
 
-| File | Task |
-|------|------|
-| `image-denoising.md` | Gaussian / Poisson / real-world noise removal (DnCNN, NAFNet, Restormer) |
-| `super-resolution.md` | Single image super-resolution ×2/×3/×4 (EDSR, SwinIR, Real-ESRGAN) |
-| `image-deblurring.md` | Motion / defocus blur removal (NAFNet, MPRNet, DeblurGAN-v2) |
-| `data-augmentation.md` | Pair-consistent augmentation pipelines using albumentations |
+Agent Skills following the [agent skills open standard](https://copilot-academy.github.io/workshops/copilot-customization/agent_skills_developer_guide). Each skill lives in its own subdirectory with a `SKILL.md` file containing YAML frontmatter and instructions.
+
+| Directory | Task |
+|-----------|------|
+| `image-denoising/` | Gaussian / Poisson / real-world noise removal (DnCNN, NAFNet, Restormer) |
+| `super-resolution/` | Single image super-resolution ×2/×3/×4 (EDSR, SwinIR, Real-ESRGAN) |
+| `image-deblurring/` | Motion / defocus blur removal (NAFNet, MPRNet, DeblurGAN-v2) |
+| `data-augmentation/` | Pair-consistent augmentation pipelines using albumentations |
 
 ## Resources
 
