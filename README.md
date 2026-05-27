@@ -36,24 +36,24 @@ This template defines:
 
 ## Computer Vision Framework
 
-This template includes documentation for building a Computer Vision machine learning framework.
+This template includes documentation for building a supervised learning **Image Restoration** framework using PyTorch, with experiment tracking via MLflow.
 
 ### Subagents (`docs/subagents/`)
 
 | File | Role |
 |------|------|
-| `cv-data-agent.md` | Dataset loading, preprocessing, and augmentation pipelines |
-| `cv-training-agent.md` | Model training, optimization, and checkpoint management |
-| `cv-evaluation-agent.md` | Metrics computation, visualization, and model analysis |
+| `cv-data-agent.md` | Pair dataset loading, synthetic degradation pipelines, and patch-based DataLoader |
+| `cv-training-agent.md` | Model training with pixel/perceptual/SSIM loss, MLflow experiment tracking |
+| `cv-evaluation-agent.md` | PSNR / SSIM / LPIPS evaluation, side-by-side visualization, MLflow logging |
 
 ### Skills (`docs/skills/`)
 
 | File | Task |
 |------|------|
-| `image-classification.md` | Single-label and multi-label image classification |
-| `object-detection.md` | Bounding box detection (YOLO, DETR, Faster R-CNN) |
-| `image-segmentation.md` | Semantic and instance segmentation |
-| `data-augmentation.md` | Augmentation pipelines using albumentations |
+| `image-denoising.md` | Gaussian / Poisson / real-world noise removal (DnCNN, NAFNet, Restormer) |
+| `super-resolution.md` | Single image super-resolution ×2/×3/×4 (EDSR, SwinIR, Real-ESRGAN) |
+| `image-deblurring.md` | Motion / defocus blur removal (NAFNet, MPRNet, DeblurGAN-v2) |
+| `data-augmentation.md` | Pair-consistent augmentation pipelines using albumentations |
 
 ## Resources
 

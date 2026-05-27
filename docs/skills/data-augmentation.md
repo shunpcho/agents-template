@@ -2,8 +2,9 @@
 
 ## Overview
 
-Computer Vision モデルの汎化性能を高めるためのデータ拡張スキルです。
-`albumentations` ライブラリを主軸に、タスクに応じた拡張パイプラインを構築します。
+Image Restoration モデルの汎化性能を高めるためのデータ拡張スキルです。
+Restoration タスクでは **劣化画像（degraded）とクリーン画像（clean）に必ず同一の空間変換を適用** する必要があります。
+`albumentations` ライブラリを主軸に、ペア整合が保証された拡張パイプラインを構築します。
 
 ## Applicable Agents
 
@@ -13,99 +14,114 @@ Computer Vision モデルの汎化性能を高めるためのデータ拡張ス�
 
 `albumentations` を第一選択とします。
 
-- 画像分類・物体検出・セグメンテーションの全タスクに対応
-- `torchvision.transforms` より高速かつ豊富な変換を提供
-- `BboxParams` / `KeypointParams` でアノテーションと連動した変換が可能
+- 高速かつ豊富な変換を提供
+- `additional_targets` を使って degraded / clean の 2 枚に **同一の空間変換** を適用できる
+- ランダムシードを介した再現可能な拡張をサポート
 
-## Augmentation Categories
+## Pair-Consistent Augmentation
 
-### 空間変換（Spatial Transforms）
-
-ラベル（バウンディングボックス・マスク）と連動して変換されます。
-
-| 変換 | `albumentations` クラス |
-|------|------------------------|
-| ランダムクロップ | `RandomResizedCrop` |
-| 水平反転 | `HorizontalFlip` |
-| 垂直反転 | `VerticalFlip` |
-| 回転 | `Rotate`, `ShiftScaleRotate` |
-| アフィン変換 | `Affine` |
-| エラスティック変換 | `ElasticTransform` |
-
-### ピクセル変換（Pixel Transforms）
-
-ラベルに影響を与えない変換です。
-
-| 変換 | `albumentations` クラス |
-|------|------------------------|
-| 明度・コントラスト調整 | `RandomBrightnessContrast` |
-| 色相・彩度調整 | `HueSaturationValue` |
-| ガウシアンノイズ付加 | `GaussNoise` |
-| ガウシアンブラー | `GaussianBlur` |
-| グレースケール変換 | `ToGray` |
-| カットアウト / CoarseDropout | `CoarseDropout` |
-
-### 高度な拡張
-
-| 手法 | 説明 | 実装ライブラリ |
-|------|------|----------------|
-| MixUp | 2枚の画像とラベルを線形補間 | カスタム実装または `torchvision` |
-| CutMix | 画像の一部を別画像で置換 | カスタム実装または `timm` |
-| RandAugment | ランダムに拡張を選択・適用 | `albumentations.auto_augment.RandAugment` |
-| AugMix | 複数の拡張を組み合わせ混合 | `albumentations.augmentations.domain_adaptation` |
-
-## Task-Specific Pipeline Examples
-
-### 画像分類
+Image Restoration では degraded と clean の空間的対応を壊さないことが必須です。
+`albumentations` の `additional_targets` を使用して両画像に同一変換を適用します。
 
 ```python
 import albumentations as albu
 from albumentations.pytorch import ToTensorV2
 
-train_transform = albu.Compose([
-    albu.RandomResizedCrop(height=224, width=224, scale=(0.08, 1.0)),
-    albu.HorizontalFlip(p=0.5),
-    albu.RandomBrightnessContrast(p=0.2),
-    albu.HueSaturationValue(p=0.2),
-    albu.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-    ToTensorV2(),
-])
+transform = albu.Compose(
+    [
+        albu.RandomCrop(height=128, width=128),
+        albu.HorizontalFlip(p=0.5),
+        albu.VerticalFlip(p=0.5),
+        albu.RandomRotate90(p=0.5),
+        ToTensorV2(),
+    ],
+    additional_targets={"clean": "image"},  # "degraded" が image, "clean" が追加ターゲット
+)
+
+# 使用例
+result = transform(image=degraded_np, clean=clean_np)
+degraded_tensor = result["image"]
+clean_tensor = result["clean"]
 ```
 
-### 物体検出
+## Augmentation Categories
+
+### 空間変換（Spatial Transforms）
+
+degraded / clean の両画像に **同一変換** を適用します。
+
+| 変換 | `albumentations` クラス | Restoration での利用 |
+|------|------------------------|---------------------|
+| ランダムクロップ | `RandomCrop` | 学習時のパッチ抽出（必須） |
+| 水平反転 | `HorizontalFlip` | 全タスク共通 |
+| 垂直反転 | `VerticalFlip` | 全タスク共通 |
+| 90° 回転 | `RandomRotate90` | 全タスク共通 |
+| 任意角度回転 | `Rotate` | 超解像・ノイズ除去（境界処理に注意） |
+
+### ピクセル変換（Pixel Transforms）
+
+**clean 画像にのみ適用してはならない** 変換です。
+Restoration タスクでは degraded / clean の輝度・色調整を **同時かつ同一** に行うか、あるいはまったく適用しないかを選択します。
+
+| 変換 | 推奨適用方針 |
+|------|------------|
+| 明度・コントラスト調整 | 両画像に同一パラメータで適用（`additional_targets` 利用）|
+| 色相・彩度調整 | 両画像に同一パラメータで適用（`additional_targets` 利用）|
+| ガウシアンノイズ付加 | **degraded のみ** に適用（合成劣化として `degradation.py` で管理）|
+| ブラー | **degraded のみ** に適用（合成劣化として `degradation.py` で管理）|
+
+> **注意**: ノイズ・ブラーなどの劣化付加は `data-augmentation.md` ではなく `cv-data-agent.md` の `degradation.py` で管理します。データ拡張と劣化合成を明確に分離してください。
+
+## Task-Specific Pipeline Examples
+
+### 共通（ノイズ除去・デブラー・超解像）
 
 ```python
-train_transform = albu.Compose([
-    albu.RandomResizedCrop(height=640, width=640),
-    albu.HorizontalFlip(p=0.5),
-    albu.RandomBrightnessContrast(p=0.2),
-    albu.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-    ToTensorV2(),
-], bbox_params=albu.BboxParams(format="coco", label_fields=["class_labels"]))
+import albumentations as albu
+from albumentations.pytorch import ToTensorV2
+
+train_transform = albu.Compose(
+    [
+        albu.RandomCrop(height=128, width=128),
+        albu.HorizontalFlip(p=0.5),
+        albu.VerticalFlip(p=0.5),
+        albu.RandomRotate90(p=0.5),
+        albu.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
+        ToTensorV2(),
+    ],
+    additional_targets={"clean": "image"},
+)
+
+val_transform = albu.Compose(
+    [
+        albu.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
+        ToTensorV2(),
+    ],
+    additional_targets={"clean": "image"},
+)
 ```
 
-### セグメンテーション
+### 超解像（LR / HR ペア）
 
 ```python
-train_transform = albu.Compose([
-    albu.RandomResizedCrop(height=512, width=512),
-    albu.HorizontalFlip(p=0.5),
-    albu.RandomBrightnessContrast(p=0.2),
-    albu.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-    ToTensorV2(),
-])
-# マスクには interpolation=cv2.INTER_NEAREST が自動適用される
+# LR のクロップサイズ = HR のクロップサイズ // scale
+# LR と HR は解像度が異なるため、HR に対して RandomCrop を適用し
+# LR には対応する領域を計算してクロップする（別途実装）
+# albumentations の RandomCrop は同一サイズ前提のため、
+# 超解像では HR をクロップしてから bicubic でダウンサンプリングするパイプラインを推奨する
 ```
 
 ## Implementation Guidelines
 
-- 拡張パイプラインはトレーニング時のみ適用する。検証・テスト時はリサイズと正規化のみ。
-- 拡張の確率（`p`）と強度はハイパーパラメータとして外部設定できるようにする。
-- 再現性のために `albumentations` の設定を JSON / YAML にシリアライズ可能にする（`A.to_dict()` / `A.from_dict()`）。
-- 強すぎる拡張はデータの意味を壊す場合があるため、`p` 値は小さめ（0.2〜0.5）から始める。
+- 拡張パイプラインはトレーニング時のみ適用する。検証・テスト時は正規化のみ。
+- `additional_targets` を使って degraded / clean の空間変換の一貫性を保証する。
+- 劣化付加（ノイズ・ブラー等）は `degradation.py` で管理し、このパイプラインに含めない。
+- 再現性のために `albumentations` の設定を `A.to_dict()` / `A.from_dict()` でシリアライズ可能にする。
+- テスト時は全解像度（full-size）の画像を使用する。
 
 ## Common Pitfalls
 
-- セグメンテーションマスクの補間は必ず **最近傍補間（nearest）** にする。
-- 物体検出では空間変換後にボックスが画像外に出る場合があるため、`min_visibility` を設定して除外する。
+- `additional_targets` を設定せずに変換を適用すると、degraded と clean の空間変換がずれる。
+- 超解像タスクでは LR と HR の解像度が異なるため、`RandomCrop` を LR / HR 個別に計算する必要がある。
 - 正規化は `albumentations.Normalize` でパイプライン内で行い、手動計算と混在させない。
+- 検証・テスト時にランダム拡張（HorizontalFlip 等）を適用しないよう、train / val 用パイプラインを明確に分離する。
