@@ -88,16 +88,20 @@ agents: ["cv-data-agent", "cv-evaluation-agent"]
 ## Example Structure
 
 ```
-src/
-  cv_framework/
-    training/
-      __init__.py
-      trainer.py       # Trainer クラス（学習ループ）
-      config.py        # トレーニング設定データクラス
-      loss.py          # 損失関数（Charbonnier, Perceptual, SSIM 等）
-      callbacks.py     # EarlyStopping、チェックポイント保存コールバック
-      scheduler.py     # 学習率スケジューラのファクトリ
-      logger.py        # MLflow ロガー（パラメータ・メトリクス・アーティファクト記録）
+src/{project_name}/
+  configs/
+    train.yaml         # トレーニング設定ファイル（ハイパーパラメータ・実験設定）
+  models/
+    __init__.py
+    network.py         # モデルアーキテクチャ定義
+  utils/
+    __init__.py
+    trainer.py         # Trainer クラス（学習ループ）
+    loss.py            # 損失関数（Charbonnier, Perceptual, SSIM 等）
+    callbacks.py       # EarlyStopping、チェックポイント保存コールバック
+    scheduler.py       # 学習率スケジューラのファクトリ
+    logger.py          # MLflow ロガー（パラメータ・メトリクス・アーティファクト記録）
+  train.py             # トレーニングのエントリーポイント
 ```
 
 ## Related Skills
