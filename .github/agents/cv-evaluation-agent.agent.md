@@ -74,14 +74,14 @@ agents: ["cv-data-agent"]
 ## Example Structure
 
 ```
-src/
-  cv_framework/
-    evaluation/
-      __init__.py
-      evaluator.py     # Evaluator クラス（推論 + メトリクス算出）
-      metrics.py       # PSNR / SSIM / LPIPS 計算ユーティリティ
-      visualizer.py    # サイドバイサイド可視化（degraded / restored / GT）
-      reporter.py      # 評価レポート生成（JSON）
+src/{project_name}/
+  utils/
+    __init__.py
+    evaluator.py     # Evaluator クラス（推論 + メトリクス算出）
+    metrics.py       # PSNR / SSIM / LPIPS 計算ユーティリティ
+    visualizer.py    # サイドバイサイド可視化（degraded / restored / GT）
+    reporter.py      # 評価レポート生成（JSON）
+  inference.py       # 推論・評価のエントリーポイント
 ```
 
 ## Related Skills

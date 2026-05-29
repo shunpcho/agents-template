@@ -79,16 +79,15 @@ agents: ["*"]
 ## Example Structure
 
 ```
-src/
-  cv_framework/
-    data/
-      __init__.py
-      dataset.py         # RestorationDataset クラス（degraded/clean ペア管理）
-      degradation.py     # 合成劣化パイプライン
-      transforms.py      # ペア拡張パイプライン（albumentations ベース）
-      dataloader.py      # DataLoader ファクトリ関数
-      patch_sampler.py   # ランダムパッチ抽出ユーティリティ
-      stats.py           # データセット統計量算出
+src/{project_name}/
+  data/
+    __init__.py
+    dataset.py         # RestorationDataset クラス（degraded/clean ペア管理）
+    degradation.py     # 合成劣化パイプライン
+    transforms.py      # ペア拡張パイプライン（albumentations ベース）
+    dataloader.py      # DataLoader ファクトリ関数
+    patch_sampler.py   # ランダムパッチ抽出ユーティリティ
+    stats.py           # データセット統計量算出
 ```
 
 ## Related Skills
