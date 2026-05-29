@@ -111,7 +111,8 @@ np.random.seed(seed)
 ```
 src/{project_name}/
   configs/
-    train.yaml          # トレーニング設定（ハイパーパラメータ・実験設定）
+    __init__.py
+    config.py           # 設定クラス（dataclass ベース）
   data/
     __init__.py
     dataset.py          # RestorationDataset（degraded/clean ペア管理）
@@ -139,11 +140,99 @@ tests/
 
 プロジェクト全体のコーディング規約は `.github/copilot-instructions.md` に定義されています。Image Restoration 固有の補足事項を以下に示します。
 
-- 設定クラスは `@dataclass(slots=True)` で定義し、YAML ファイルから読み込む。
+- 設定クラスは `@dataclass(frozen=True, slots=True)` で定義し、`from_optional_kwargs()` で構築する（詳細は [Configuration](#configuration) を参照）。
 - ファイルパスは常に `pathlib.Path` を使用する。
 - テンソルの値域は `[0, 1]` に統一する。
 - 学習ループはエポックではなく **イテレーション（ステップ）** で管理する。
 - バッチ正規化は Restoration タスクで不安定になることがあるため、Layer Normalization を優先する。
+
+## Configuration
+
+### Where to put configuration code
+
+Configuration-related code should live under `src/<package_name>/configs/`.
+
+Recommended structure:
+
+- `src/<package_name>/configs/__init__.py`
+- `src/<package_name>/configs/config.py`
+
+### Required design rules
+
+All configuration classes **must** follow these rules:
+
+- Use `@dataclass(frozen=True, slots=True)`.
+- Expose a `from_optional_kwargs()` classmethod for partial construction.
+- Design configs so they can be created naturally from `argparse` inputs.
+- Keep default values inside the dataclass definition.
+- Validate user-facing values in `__post_init__()`.
+
+Policy:
+
+- CLI parsing collects optional values.
+- `None` values mean "not provided by user".
+- `from_optional_kwargs()` drops `None` keys and lets dataclass defaults apply.
+
+### Recommended implementation pattern
+
+Use a dedicated `TypedDict` for kwargs accepted from CLI or other external inputs.
+
+```python
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Self, TypedDict, Unpack
+
+
+class _ExampleConfigKwargs(TypedDict, total=False):
+    output_dir: Path
+    log_dir: Path
+    batch_size: int
+
+
+@dataclass(frozen=True, slots=True)
+class ExampleConfig:
+    output_dir: Path = Path("./results")
+    log_dir: Path = Path("logs")
+    batch_size: int = 32
+
+    @classmethod
+    def from_optional_kwargs(cls, **kwargs: Unpack[_ExampleConfigKwargs]) -> Self:
+        return cls(**{key: value for key, value in kwargs.items() if value is not None})
+```
+
+### argparse integration rule
+
+Parse values first and then pass them into `from_optional_kwargs()`.
+
+```python
+import argparse
+from pathlib import Path
+
+from your_package.configs.config import TrainConfig
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output-dir", type=Path, default=None)
+    parser.add_argument("--log-dir", type=Path, default=None)
+    parser.add_argument("--batch-size", type=int, default=None)
+    return parser.parse_args()
+
+
+def build_config(args: argparse.Namespace) -> TrainConfig:
+    return TrainConfig.from_optional_kwargs(
+        output_dir=args.output_dir,
+        log_dir=args.log_dir,
+        batch_size=args.batch_size,
+    )
+```
+
+Additional notes:
+
+- Use `pathlib.Path` instead of string paths.
+- Prefer explicit field types.
+- If a field accepts only a limited set of values, validate it in `__post_init__()`.
+- If nested configuration is needed, define another frozen+slotted dataclass and compose it.
 
 ## Development Workflow
 
