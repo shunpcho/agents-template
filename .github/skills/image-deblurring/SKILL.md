@@ -29,29 +29,29 @@ description: >
 
 ## Blur Types
 
-| ブラー種別 | 説明 | 合成方法 |
-|----------|------|---------|
-| Gaussian blur | ピントのズレを模擬 | `albumentations.GaussianBlur` |
-| Motion blur | 手ブレ・被写体ブレを模擬 | ランダム方向・長さのカーネルで畳み込み |
-| Defocus blur | レンズのデフォーカス | 円形カーネル（disk kernel）で畳み込み |
-| Real-world blur | 実際のカメラ手ブレ | GoPro / HIDE などの実劣化データセットを使用 |
+| ブラー種別      | 説明                     | 合成方法                                    |
+| --------------- | ------------------------ | ------------------------------------------- |
+| Gaussian blur   | ピントのズレを模擬       | `albumentations.GaussianBlur`               |
+| Motion blur     | 手ブレ・被写体ブレを模擬 | ランダム方向・長さのカーネルで畳み込み      |
+| Defocus blur    | レンズのデフォーカス     | 円形カーネル（disk kernel）で畳み込み       |
+| Real-world blur | 実際のカメラ手ブレ       | GoPro / HIDE などの実劣化データセットを使用 |
 
 ## Recommended Architectures
 
-| ユースケース | 推奨アーキテクチャ |
-|------------|-----------------|
-| 高品質・汎用 | `NAFNet`, `Restormer`, `MPRNet` |
-| Motion blur 特化 | `DeblurGAN-v2`, `MIMO-UNet` |
-| 軽量 | `GRL-B`（軽量版）、`FFDNet` 変形 |
+| ユースケース     | 推奨アーキテクチャ               |
+| ---------------- | -------------------------------- |
+| 高品質・汎用     | `NAFNet`, `Restormer`, `MPRNet`  |
+| Motion blur 特化 | `DeblurGAN-v2`, `MIMO-UNet`      |
+| 軽量             | `GRL-B`（軽量版）、`FFDNet` 変形 |
 
 ## Benchmark Datasets
 
-| データセット | ブラー種別 | 備考 |
-|------------|----------|------|
-| GoPro Large | Real motion blur | 2013 枚の train / 1111 枚の test |
-| HIDE | Real motion blur | 人物シーンに特化 |
-| RealBlur-J / RealBlur-R | Real blur | JPEG 版と RAW 版 |
-| DPDD | Defocus blur | Dual-pixel データ付き |
+| データセット            | ブラー種別       | 備考                             |
+| ----------------------- | ---------------- | -------------------------------- |
+| GoPro Large             | Real motion blur | 2013 枚の train / 1111 枚の test |
+| HIDE                    | Real motion blur | 人物シーンに特化                 |
+| RealBlur-J / RealBlur-R | Real blur        | JPEG 版と RAW 版                 |
+| DPDD                    | Defocus blur     | Dual-pixel データ付き            |
 
 ## Key Metrics
 
@@ -68,7 +68,7 @@ description: >
 - [ ] `torchmetrics.image.PeakSignalNoiseRatio` で PSNR を算出する
 - [ ] `torchmetrics.image.StructuralSimilarityIndexMeasure` で SSIM を算出する
 - [ ] `mlflow.log_params` でブラー設定・モデル設定を記録する
-- [ ] `mlflow.log_metrics(step=epoch)` で epoch ごとの loss / PSNR / SSIM を記録する
+- [ ] `mlflow.log_metrics(step=iteration)` で validation ごとの loss / PSNR / SSIM を記録する
 - [ ] `mlflow.pytorch.log_model` でトレーニング済みモデルを保存する
 
 ## Common Pitfalls

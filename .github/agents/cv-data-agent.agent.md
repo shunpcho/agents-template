@@ -26,14 +26,14 @@ agents: ["*"]
 - データ拡張（`.github/skills/data-augmentation/SKILL.md` を参照）
 - `torch.utils.data.Dataset` / `DataLoader` の実装
 - データセット統計量（平均・標準偏差）の算出
-- データ分割（train / val / test）の管理
+- データ分割（train / val）の管理
 
 ## Interaction with Other Agents
 
 | Agent               | 連携内容                                                |
 | ------------------- | ------------------------------------------------------- |
 | CV Training Agent   | 前処理済み (degraded, clean) ペア DataLoader を提供する |
-| CV Evaluation Agent | テストセットの DataLoader（full-size 画像）を提供する   |
+| CV Evaluation Agent | 検証セットの DataLoader（full-size 画像）を提供する     |
 
 ## Key Libraries
 
@@ -51,7 +51,7 @@ agents: ["*"]
   - `docs/data_structure.md` に定義された以下の 3 ケースに対応する：
     - **Case 1**: 単一ディレクトリにペア画像が混在（例: `_mean` / `_real` キーワードで対応付け）
     - **Case 2**: `train` / `val` サブディレクトリを持ち、各ディレクトリ内でキーワード対応付け（例: `_mean` / `_real`）
-    - **Case 3**: `clean` / `degre` サブディレクトリで分離
+    - **Case 3**: `clean` / `degraded` サブディレクトリで分離
   - Case 1・Case 3 はデータセット読み込み時に train / val へ分割する。分割比率はハイパーパラメータとして設定可能にする。
   - Case 2 は既存の `train` / `val` ディレクトリをそのまま train / val セットとして使用する。
 - 劣化合成設定（`@dataclass(slots=True)`）
@@ -59,7 +59,7 @@ agents: ["*"]
 
 ### Output
 
-- `torch.utils.data.DataLoader`（train / val / test）
+- `torch.utils.data.DataLoader`（train / val）
   - 各バッチは `tuple[torch.Tensor, torch.Tensor]`（degraded, clean）
 - データセット統計量（`npt.NDArray[np.float32]`）
 

@@ -1,8 +1,8 @@
 ---
 name: image-denoising
 description: >
-  画像ノイズ除去（Image Denoising）タスクを実装する。
-  ノイズ付き劣化画像からクリーン画像を復元する教師あり学習モデルを構築する。
+  Image Restoration タスクを実装する。
+  劣化画像からクリーン画像を復元する教師あり学習モデルを構築する。
   AWGN、Poisson noise、salt-and-pepper、real-world noise に対応。
   DnCNN、NAFNet、Restormer などのアーキテクチャを使用する場合に利用する。
 ---
@@ -11,8 +11,8 @@ description: >
 
 ## Overview
 
-画像ノイズ除去（Image Denoising）タスクを実装するためのスキルです。
-教師あり学習により、ノイズを含む劣化画像（noisy）からクリーン画像（clean）を復元します。
+Image Restoration タスクの一部を実装するスキルです。
+教師あり学習により、劣化画像（degraded）からクリーン画像（clean）を復元します。
 
 ## Applicable Agents
 
@@ -22,36 +22,27 @@ description: >
 
 ## Task Definition
 
-- **入力**: ノイズ付き画像 (`torch.Tensor`, shape `[B, C, H, W]`, 値域 `[0, 1]`)
+- **入力**: 劣化画像 (`torch.Tensor`, shape `[B, C, H, W]`, 値域 `[0, 1]`)
 - **出力**: 復元クリーン画像 (`torch.Tensor`, shape `[B, C, H, W]`, 値域 `[0, 1]`)
 - **損失関数**: `L1Loss` または Charbonnier Loss（主流）、`+ λ * SSIMLoss`（任意）
 
-## Noise Types
-
-| ノイズ種別 | 説明 | 合成方法 |
-|-----------|------|---------|
-| Additive White Gaussian (AWGN) | ガウス分布に従うノイズ | `image + N(0, σ²)` |
-| Poisson noise | 光子計数ノイズ（医療・天文） | `torch.poisson(image * peak) / peak` |
-| Salt-and-pepper | ランダムなゴマ塩ノイズ | ランダムピクセルを 0/1 に置換 |
-| Real-world noise | 複合的なカメラノイズ | SIDD / PolyU など実劣化データセットを使用 |
-
 ## Recommended Architectures
 
-| ユースケース | 推奨アーキテクチャ |
-|------------|-----------------|
-| Blind / Non-blind AWGN 除去 | `DnCNN`, `FFDNet` |
-| 高品質・汎用 | `NAFNet`, `Restormer` |
-| リアルタイム向け | `DIDN`（軽量版） |
-| 医療画像 | `U-Net` ベースの変形 |
+| ユースケース                | 推奨アーキテクチャ    |
+| --------------------------- | --------------------- |
+| Blind / Non-blind AWGN 除去 | `DnCNN`, `FFDNet`     |
+| 高品質・汎用                | `NAFNet`, `Restormer` |
+| リアルタイム向け            | `DIDN`（軽量版）      |
+| 医療画像                    | `U-Net` ベースの変形  |
 
 ## Benchmark Datasets
 
-| データセット | 種別 | 用途 |
-|------------|------|------|
-| BSD68 | Synthetic AWGN | Gray image denoising 評価 |
-| CBSD68 | Synthetic AWGN | Color image denoising 評価 |
-| SIDD | Real-world | スマートフォンカメラノイズ除去 |
-| DND | Real-world | デジタルカメラノイズ除去 |
+| データセット | 種別           | 用途                           |
+| ------------ | -------------- | ------------------------------ |
+| BSD68        | Synthetic AWGN | Gray image denoising 評価      |
+| CBSD68       | Synthetic AWGN | Color image denoising 評価     |
+| SIDD         | Real-world     | スマートフォンカメラノイズ除去 |
+| DND          | Real-world     | デジタルカメラノイズ除去       |
 
 ## Key Metrics
 
@@ -68,7 +59,7 @@ description: >
 - [ ] `torchmetrics.image.PeakSignalNoiseRatio` で PSNR を算出する
 - [ ] `torchmetrics.image.StructuralSimilarityIndexMeasure` で SSIM を算出する
 - [ ] `mlflow.log_params` でノイズレベル・モデル設定を記録する
-- [ ] `mlflow.log_metrics(step=epoch)` で epoch ごとの loss / PSNR / SSIM を記録する
+- [ ] `mlflow.log_metrics(step=iteration)` で validation ごとの loss / PSNR / SSIM を記録する
 - [ ] `mlflow.pytorch.log_model` でトレーニング済みモデルを保存する
 
 ## Common Pitfalls

@@ -26,10 +26,10 @@ agents: ["cv-data-agent", "cv-evaluation-agent"]
 
 ## Interaction with Other Agents
 
-| Agent               | 連携内容                                                   |
-| ------------------- | ---------------------------------------------------------- |
-| CV Data Agent       | (degraded, clean) ペアの DataLoader を受け取る             |
-| CV Evaluation Agent | 各 epoch 終了後の検証メトリクス（PSNR / SSIM）を評価させる |
+| Agent               | 連携内容                                                                   |
+| ------------------- | -------------------------------------------------------------------------- |
+| CV Data Agent       | (degraded, clean) ペアの DataLoader を受け取る                             |
+| CV Evaluation Agent | 学習1回目と各 validation 終了後の検証メトリクス（PSNR / SSIM）を評価させる |
 
 ## Key Libraries
 
@@ -75,7 +75,7 @@ agents: ["cv-data-agent", "cv-evaluation-agent"]
 ## Implementation Guidelines
 
 - トレーニング設定は `@dataclass(slots=True)` で定義し、YAML ファイルから読み込む。
-- 学習ループはエポックではなく **イテレーション（ステップ）** で管理する。`args.num_iterations` を上限とし、`for iteration in range(args.num_iterations):` のような形で実装する。
+- 学習ループは **イテレーション（ステップ）** で管理する。`args.num_iterations` を上限とし、`for iteration in range(args.num_iterations):` のような形で実装する。
 - `iteration % args.val_interval == 0` の条件で validation を実行し、検証メトリクス（PSNR / SSIM）を記録する。
 - 再現性を確保するためにランダムシードを固定する（`torch.manual_seed`, `numpy.random.seed`）。
 - `pathlib.Path` を使用してチェックポイントのパスを管理する。
@@ -90,7 +90,8 @@ agents: ["cv-data-agent", "cv-evaluation-agent"]
 ```
 src/{project_name}/
   configs/
-    train.yaml         # トレーニング設定ファイル（ハイパーパラメータ・実験設定）
+    __init__.py
+    train_config.py    # トレーニング設定ファイル（ハイパーパラメータ・実験設定）
   models/
     __init__.py
     network.py         # モデルアーキテクチャ定義

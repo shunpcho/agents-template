@@ -29,29 +29,29 @@ description: >
 
 ## Degradation Models
 
-| 劣化モデル | 説明 |
-|----------|------|
-| Bicubic downsampling | 古典的なベースライン（SRCNN 等で使用） |
-| Blur + Downscale + Noise (BD) | 現実的な劣化の近似 |
+| 劣化モデル                       | 説明                                     |
+| -------------------------------- | ---------------------------------------- |
+| Bicubic downsampling             | 古典的なベースライン（SRCNN 等で使用）   |
+| Blur + Downscale + Noise (BD)    | 現実的な劣化の近似                       |
 | Real-ESRGAN degradation pipeline | 複合的・ランダムな劣化（実写画像に対応） |
 
 ## Recommended Architectures
 
-| ユースケース | 推奨アーキテクチャ |
-|------------|-----------------|
-| 精度重視 | `SwinIR`, `HAT`, `DRLN` |
-| 軽量・リアルタイム | `IMDN`, `RFDN`, `ABPN` |
+| ユースケース          | 推奨アーキテクチャ      |
+| --------------------- | ----------------------- |
+| 精度重視              | `SwinIR`, `HAT`, `DRLN` |
+| 軽量・リアルタイム    | `IMDN`, `RFDN`, `ABPN`  |
 | 知覚的品質重視（GAN） | `ESRGAN`, `Real-ESRGAN` |
-| 汎用 baseline | `EDSR` |
+| 汎用 baseline         | `EDSR`                  |
 
 ## Benchmark Datasets
 
-| データセット | 用途 |
-|------------|------|
-| DIV2K (800 train / 100 val) | 学習・検証の標準データセット |
-| Set5 / Set14 / BSD100 | 標準テストセット（bicubic ×2 / ×3 / ×4） |
-| Urban100 | 高頻度テクスチャ（建物・格子）の評価 |
-| Manga109 | マンガ・イラスト画像の評価 |
+| データセット                | 用途                                     |
+| --------------------------- | ---------------------------------------- |
+| DIV2K (800 train / 100 val) | 学習・検証の標準データセット             |
+| Set5 / Set14 / BSD100       | 標準テストセット（bicubic ×2 / ×3 / ×4） |
+| Urban100                    | 高頻度テクスチャ（建物・格子）の評価     |
+| Manga109                    | マンガ・イラスト画像の評価               |
 
 評価は **Y チャンネル（YCbCr 変換後）** で PSNR / SSIM を算出するのが標準。
 
@@ -71,7 +71,7 @@ description: >
 - [ ] `torchmetrics.image.PeakSignalNoiseRatio` で PSNR を算出する
 - [ ] `torchmetrics.image.StructuralSimilarityIndexMeasure` で SSIM を算出する
 - [ ] `mlflow.log_params` でスケール因子・劣化設定・モデル設定を記録する
-- [ ] `mlflow.log_metrics(step=epoch)` で epoch ごとの loss / PSNR / SSIM を記録する
+- [ ] `mlflow.log_metrics(step=iteration)` で validation ごとの loss / PSNR / SSIM を記録する
 - [ ] `mlflow.pytorch.log_model` でトレーニング済みモデルを保存する
 
 ## Common Pitfalls
