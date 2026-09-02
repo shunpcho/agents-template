@@ -16,8 +16,8 @@ This is a template repository providing guidelines, best practices, and conventi
 
 ## 0) Where to find coding rules
 
-- Coding rules (style, typing, testing, tooling) are defined in:
-  - `.github/copilot-instructions.md`
+- Coding rules for Python (style, typing, testing, tooling) are defined in:
+  - `.github/instructions/python.instructions.md`
 - Consult it before making stylistic decisions.
 
 ## 1) Priority / scope
